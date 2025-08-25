@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uestc.mapper.ClazzMapper">
+    <select id="list" resultType="com.uestc.pojo.Clazz">
+    SELECT c.*, e.name masterName FROM clazz c left join emp e
+        on c.master_id = e.id
+    <where>
+        <if test="name != null and name != ''">
+            c.name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="begin != null and end != null">
+            AND c.end_date BETWEEN #{begin} AND #{end}
+        </if>
+    </where>
+    ORDER BY c.end_date DESC
+    </select>
+    <insert id="insert" parameterType="com.uestc.pojo.Clazz">
+        INSERT INTO clazz (name, room, master_id, subject,begin_date, end_date, create_time, update_time)
+        VALUES (#{name},#{room}, #{masterId},#{subject}, #{beginDate}, #{endDate}, #{createTime}, #{updateTime})
+    </insert>
+    <select id="getById" parameterType="int" resultType="com.uestc.pojo.Clazz">
+        SELECT *
+        FROM clazz
+        WHERE id = #{id}
+    </select>
+    <update id="updateClazz" parameterType="com.uestc.pojo.Clazz">
+    UPDATE clazz
+    <set>
+        <if test="name != null and name != ''">name = #{name},</if>
+        <if test="room != null and room != ''">room = #{room},</if>
+        <if test="masterId != null">master_id = #{masterId},</if>
+        <if test="subject != null and subject != ''">subject = #{subject},</if>
+        <if test="beginDate != null">begin_date = #{beginDate},</if>
+        <if test="endDate != null">end_date = #{endDate},</if>
+        <if test="updateTime != null">update_time = #{updateTime},</if>
+    </set>
+    WHERE id = #{id}
+    </update>
+    <delete id="delete">
+        delete from clazz where id = #{id}
+    </delete>
+    <select id="haveStudents" resultType="boolean">
+        select exists(select 1 from student where clazz_id = #{id})
+    </select>
+    <select id = "listAll" resultType="com.uestc.pojo.Clazz">
+        select * from clazz
+    </select>
+    <select id = "countClazzData" resultType="java.util.Map">
+        select c.name clazzName, count(*) studentCount
+        from student s left join clazz c
+        on s.clazz_id = c.id
+        group by c.id order by studentCount
+    </select>
+</mapper>

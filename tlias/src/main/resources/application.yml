@@ -1,0 +1,33 @@
+
+spring:
+
+  # 设置应用程序的名称
+  application:
+    name: tlias-web
+
+  # 配置数据库链接
+  datasource:
+    url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: xuexi.1104
+  servlet:
+    multipart:
+      max-file-size: 50MB # 设置上传文件的最大大小
+      max-request-size: 100MB # 设置请求的最大大小
+
+# 配置Mybatis
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 输出SQL到控制台
+    map-underscore-to-camel-case: true # 下划线转驼峰
+
+logging:
+    level:
+        org.springframework.jdbc.support.JdbcTransactionManager: DEBUG # Mybatis-Plus日志级别为DEBUG
+
+aliyun:
+    oss:
+      endpoint: https://oss-cn-chengdu.aliyuncs.com
+      bucketName: seventeen-java
+      region: cn-chengdu
